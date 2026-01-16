@@ -4,6 +4,7 @@
   - [Prerequisites](#prerequisites)
   - [Create \& Configure GCP Project](#create--configure-gcp-project)
   - [Create GCP Infrastructure](#create-gcp-infrastructure)
+  - [TODO](#todo)
 
 ## Prerequisites
 
@@ -25,3 +26,37 @@ gcloud auth application-default login # Terraform will now use your account to a
 ## Create GCP Infrastructure
 
 See [the README of `./02-terraform-gcp-infrastructure`](./02-terraform-gcp-infrastructure/README.md).
+
+## TODO
+
+```sh
+gcloud compute ssh clawdbot
+
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gnupg
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo $VERSION_CODENAME) stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+sudo usermod -aG docker $USER
+newgrp docker
+
+git clone https://github.com/patricktree/clawdbot.git"
+cd ./clawdbot
+echo 'CLAWDBOT_HOME_VOLUME="clawdbot_home"' > .env
+./docker-setup.sh
+
+# Open host port to VM port for Gateway
+gcloud compute ssh clawdbot -- -N -L 18789:localhost:18789
+
+# Write the bot via Telegram, it sends you back a code. Then:
+docker compose -f /home/pkerschbaum/clawdbot/docker-compose.yml run --rm clawdbot-cli pairing approve telegram <code>
+```
