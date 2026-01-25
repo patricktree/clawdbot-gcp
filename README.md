@@ -122,7 +122,7 @@ docker compose -f ./docker-compose.yml run --rm clawdbot-cli configure
 1. Open <https://login.tailscale.com/admin/machines>.
 2. Click on machine `clawdbot-gateway`.
 3. Copy value of "Full domain".
-4. Visit `http://<fulldomain>:18789` on one of your devices which is also connected to your Tailscale VPN.
+4. Visit `https://<fulldomain>` on one of your devices which is also connected to your Tailscale VPN.
    - You should see the Clawdbot Gateway.
 5. Click left on "Overview" --> enter the Gateway token in field "Gateway Token" --> Click on "Connect".
    - You should see `Health: OK` on the upper right of the gateway dashboard.
